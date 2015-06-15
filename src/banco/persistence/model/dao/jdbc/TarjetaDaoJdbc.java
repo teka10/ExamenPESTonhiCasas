@@ -96,8 +96,24 @@ public class TarjetaDaoJdbc implements TarjetaDao{
 	}
 
 	@Override
-	public void bloquearTarjeta(String numero) {
-		
+	public void bloquear(String numero) {
+		try {
+			abrirConexion();
+			PreparedStatement ps=cx.prepareStatement
+					("UPDATE TARJETACREDITO SET BLOQUEADA = TRUE WHERE NUMERO = ?");
+			ps.setString(1,numero);
+
+			ps.executeUpdate();
+			cx.commit();
+		} catch (SQLException e) {
+			try {
+				cx.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		cerrarConexion();
 		
 	}
 
@@ -122,5 +138,7 @@ public class TarjetaDaoJdbc implements TarjetaDao{
 			e.printStackTrace();
 		}	
 	}
+
+
 
 }

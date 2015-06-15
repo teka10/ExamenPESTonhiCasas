@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import banco.controllers.ejb.AltaTarjetaControllerEjb;
 import banco.controllers.ejb.ActualizarDisponibleControllerEjb;
+import banco.controllers.ejb.BloquearTarjetaControllerEjb;
 import banco.controllers.ejb.BuscarPorNumeroControllerEjb;
 import banco.controllers.ejb.PagoControllerEjb;
 import banco.model.entity.TarjetaCredito;
@@ -49,6 +50,10 @@ public class BancoServlet extends HttpServlet {
 			rd=request.getRequestDispatcher("/jsp/pago.jsp");
 			rd.forward(request,response);
 			break;
+		case "bloquear1":
+			rd=request.getRequestDispatcher("/jsp/bloquearTarjeta.jsp");
+			rd.forward(request,response);
+			break;
 		default:
 			break;
 		}
@@ -72,7 +77,7 @@ public class BancoServlet extends HttpServlet {
 			String tipo = request.getParameter("tipo");
 			String numeroComprobacion = request.getParameter("numeroComprobacion");
 			String contrasenha = request.getParameter("contrasenha");
-			boolean bloqueada = Boolean.getBoolean(request.getParameter("bloqueada"));
+			boolean bloqueada = false;
 			
 			TarjetaCredito tarjeta = new TarjetaCredito(numero, cupoMaximo, 
 					cupoDisponible,tipo,numeroComprobacion,contrasenha,bloqueada,0);
@@ -108,6 +113,13 @@ public class BancoServlet extends HttpServlet {
 			int importe = Integer.parseInt(request.getParameter("importe"));
 			PagoControllerEjb controlador3 = new PagoControllerEjb();
 			controlador3.pagoTarjeta(num3, contrasenha1, numeroComprobacion1, importe);
+			rd = request.getRequestDispatcher("/index.jsp");
+			rd.forward(request, response);
+			break;
+		case "bloquear2":
+			String num4 = request.getParameter("numero");
+			BloquearTarjetaControllerEjb controlador4 = new BloquearTarjetaControllerEjb();
+			controlador4.bloquearTarjeta(num4);
 			rd = request.getRequestDispatcher("/index.jsp");
 			rd.forward(request, response);
 			break;

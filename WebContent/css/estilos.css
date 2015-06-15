@@ -1,0 +1,45 @@
+*{
+    margin:0;
+    padding:0;
+}
+body{
+    background-color:#F5F6CE;
+    margin:1em auto;
+    width:80%;
+    
+}
+label{
+    display:block;
+    margin: 1em 0 0 0;
+}
+h1, h2{
+	color:#3F2802;
+	text-align: center;
+	margin:20px 0;
+}
+nav{
+	display: inline;
+	margin: 0 auto;
+}
+li{
+    display: inline;
+    border:0.1em solid black;
+    background-color: #A9CA02;
+    border-radius:5px;
+
+
+}
+footer{
+	margin: 50px auto;
+	text-align: center;
+}
+#imgCajero{
+	border-radius: 30px;
+	width: 400px;
+	display:block;
+	margin:20px auto;
+}
+.boton{
+	padding: 0 10px;
+	margin: 10px  10px 10px 0;
+}
