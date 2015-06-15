@@ -8,9 +8,10 @@ import banco.persistence.model.dao.jdbc.TarjetaDaoJdbc;
 public class AltaTarjetaControllerEjb implements AltaTarjetaController{
 	public TarjetaDao tarjetaDao;
 	@Override
-	public void altaTarjeta(TarjetaCredito tarjeta) {
+	public String altaTarjeta(TarjetaCredito tarjeta) {
 		tarjetaDao = new TarjetaDaoJdbc();
-		tarjetaDao.altaTarjeta(tarjeta);
+		return tarjetaDao.altaTarjeta(tarjeta);
+		
 	}
 
 }

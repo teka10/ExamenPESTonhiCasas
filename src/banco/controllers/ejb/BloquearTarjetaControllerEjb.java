@@ -7,10 +7,9 @@ import banco.persistence.model.dao.jdbc.TarjetaDaoJdbc;
 public class BloquearTarjetaControllerEjb implements BloquearTarjetaController{
 
 	@Override
-	public void bloquearTarjeta(String numero) {
+	public String bloquearTarjeta(String numero) {
 		TarjetaDao tarjetaDao = new TarjetaDaoJdbc();
-		tarjetaDao.bloquear(numero);
-		
+		return tarjetaDao.bloquear(numero);
 	}
 
 }

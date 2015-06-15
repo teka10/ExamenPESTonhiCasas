@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/Templates/header.jsp" %>
 <h2>ALTA DE TARJETA NUEVA</h2>
+    <label><%=request.getAttribute("mensaje") %></label>
     <form action="${pageContext.request.contextPath}/Banco/altaTarjeta2" method="post" enctype="text/html" name="form1">
         <label>Número de tarjeta</label>
         <input type="text" name="numero" required/>
@@ -9,8 +10,11 @@
         <input type="text" name="cupoMaximo" required/>
         <label>Cupo Disponible</label>
         <input type="text" name="cupoDisponible" required/>
-        <label>Tipo (Visa/Master Card)</label>
-        <input type="text" name="tipo" required/>
+        <br>
+        <br>
+        <input type="radio" name="tipo" value="Visa" checked/>Visa
+        <br>
+        <input type="radio" name="tipo" value="MasterCard" />Master Card
         <label>Número de comprobación</label>
         <input type="text" name="numeroComprobacion" required/>
         <label>Contraseña</label>

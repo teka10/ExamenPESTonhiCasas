@@ -17,7 +17,8 @@ public class TarjetaDaoJdbc implements TarjetaDao{
 	}
 
 	@Override
-	public void altaTarjeta(TarjetaCredito tarjeta) {
+	public String altaTarjeta(TarjetaCredito tarjeta) {
+		String mensaje="";
 		try {
 			abrirConexion();
 			PreparedStatement ps=cx.prepareStatement
@@ -35,13 +36,21 @@ public class TarjetaDaoJdbc implements TarjetaDao{
 			cx.commit();
 		} catch (SQLException e) {
 			try {
+				int m=e.getErrorCode();
+				if (m==1062){
+					mensaje="Tarjeta ya existente";
+				}else{
+					mensaje=e.getMessage();
+				}
 				cx.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
+				mensaje=e.getMessage();
 			}
 			e.printStackTrace();
 		}
 		cerrarConexion();
+		return mensaje;
 	}
 
 	@Override
@@ -54,15 +63,19 @@ public class TarjetaDaoJdbc implements TarjetaDao{
 			ps.setString(1,numero);
 			
 			ResultSet consulta = ps.executeQuery();
-			consulta.next();
-			tarjeta.setNumero(numero);
-			tarjeta.setCupoMaximo(consulta.getInt("cupoMaximo"));
-			tarjeta.setCupoDisponible(consulta.getInt("cupoDisponible"));
-			tarjeta.setTipo(consulta.getString("tipo"));
-			tarjeta.setNumeroComprobacion(consulta.getString("numeroComprobacion"));
-			tarjeta.setContrasenha(consulta.getString("contrasenha"));
-			tarjeta.setBloqueada(consulta.getBoolean("bloqueada"));
-			tarjeta.setId(consulta.getInt("id"));
+						
+			if (consulta.next()){
+				tarjeta.setNumero(numero);
+				tarjeta.setCupoMaximo(consulta.getInt("cupoMaximo"));
+				tarjeta.setCupoDisponible(consulta.getInt("cupoDisponible"));
+				tarjeta.setTipo(consulta.getString("tipo"));
+				tarjeta.setNumeroComprobacion(consulta.getString("numeroComprobacion"));
+				tarjeta.setContrasenha(consulta.getString("contrasenha"));
+				tarjeta.setBloqueada(consulta.getBoolean("bloqueada"));
+				tarjeta.setId(consulta.getInt("id"));
+			}else{
+				tarjeta.setNumero("0");
+			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -73,8 +86,8 @@ public class TarjetaDaoJdbc implements TarjetaDao{
 	}
 
 	@Override
-	public void actualizarDisponible(String numero, int disponible) {
-
+	public String actualizarDisponible(String numero, int disponible) {
+		String mensaje="";
 		try {
 			abrirConexion();
 			PreparedStatement ps=cx.prepareStatement
@@ -82,38 +95,51 @@ public class TarjetaDaoJdbc implements TarjetaDao{
 			ps.setInt(1,disponible);
 			ps.setString(2,numero);
 
-			ps.executeUpdate();
+			int filas=ps.executeUpdate();
+			if (filas==0){
+				mensaje="Tarjeta inexistente";
+			}
 			cx.commit();
 		} catch (SQLException e) {
 			try {
 				cx.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
+				mensaje=e.getMessage();
 			}
 			e.printStackTrace();
+			mensaje=e.getMessage();
 		}
 		cerrarConexion();
+		return mensaje;
 	}
 
 	@Override
-	public void bloquear(String numero) {
+	public String bloquear(String numero) {
+		String mensaje="";
 		try {
 			abrirConexion();
 			PreparedStatement ps=cx.prepareStatement
 					("UPDATE TARJETACREDITO SET BLOQUEADA = TRUE WHERE NUMERO = ?");
 			ps.setString(1,numero);
 
-			ps.executeUpdate();
+			int filas=ps.executeUpdate();
+			if (filas==0){
+				mensaje="Tarjeta inexistente";
+			}
 			cx.commit();
 		} catch (SQLException e) {
 			try {
 				cx.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
+				mensaje=e.getMessage();
 			}
 			e.printStackTrace();
+			mensaje=e.getMessage();
 		}
 		cerrarConexion();
+		return mensaje;
 		
 	}
 

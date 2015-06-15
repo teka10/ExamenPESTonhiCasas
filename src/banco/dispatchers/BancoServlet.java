@@ -39,19 +39,23 @@ public class BancoServlet extends HttpServlet {
 		
 		switch (action){
 		case "altaTarjeta1":
+			request.setAttribute("mensaje", "Datos obligatorios:");
 			rd=request.getRequestDispatcher("/jsp/altaTarjeta.jsp");
 			rd.forward(request,response);
 			break;
 		case "ampliarDisponible1":
+			request.setAttribute("mensaje", "Datos obligatorios:");
 			rd=request.getRequestDispatcher("/jsp/buscarTarjeta.jsp");
 			rd.forward(request,response);
 			break;
-		case "pago1":
-			rd=request.getRequestDispatcher("/jsp/pago.jsp");
+		case "bloquear1":
+			request.setAttribute("mensaje", "Datos obligatorios:");
+			rd=request.getRequestDispatcher("/jsp/bloquearTarjeta.jsp");
 			rd.forward(request,response);
 			break;
-		case "bloquear1":
-			rd=request.getRequestDispatcher("/jsp/bloquearTarjeta.jsp");
+		case "pago1":
+			request.setAttribute("mensaje", "Datos obligatorios:");
+			rd=request.getRequestDispatcher("/jsp/pago.jsp");
 			rd.forward(request,response);
 			break;
 		default:
@@ -67,7 +71,7 @@ public class BancoServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		RequestDispatcher rd;
 		String titulo="Sin titulo";
-		
+		String mensaje="";
 		switch (action){
 		case "altaTarjeta2":
 			
@@ -82,8 +86,13 @@ public class BancoServlet extends HttpServlet {
 			TarjetaCredito tarjeta = new TarjetaCredito(numero, cupoMaximo, 
 					cupoDisponible,tipo,numeroComprobacion,contrasenha,bloqueada,0);
 			AltaTarjetaControllerEjb controlador = new AltaTarjetaControllerEjb();
-			controlador.altaTarjeta(tarjeta);
-			rd = request.getRequestDispatcher("/index.jsp");
+			mensaje=controlador.altaTarjeta(tarjeta);
+			if(mensaje==""){
+				rd = request.getRequestDispatcher("/index.jsp");		
+			}else{
+				request.setAttribute("mensaje", mensaje);
+				rd=request.getRequestDispatcher("/jsp/altaTarjeta.jsp");
+			}
 			rd.forward(request, response);
 			break;
 		case "ampliarDisponible2":
@@ -91,11 +100,16 @@ public class BancoServlet extends HttpServlet {
 			//buscar por numero de tarjeta
 			BuscarPorNumeroControllerEjb controlador1 = new BuscarPorNumeroControllerEjb();
 			TarjetaCredito tarjeta1= controlador1.buscarTarjeta(num1);
-			request.setAttribute("titulo", "Ampliar Disponible");
-			request.setAttribute("numero", tarjeta1.getNumero());
-			request.setAttribute("cupoDisponible", tarjeta1.getCupoDisponible());
-			request.setAttribute("accion", "Ampliar Disponible");
-			rd = request.getRequestDispatcher("/jsp/modificar.jsp");
+			if(tarjeta1.getNumero()=="0"){
+				request.setAttribute("mensaje", "Tarjeta inexistente");
+				rd=request.getRequestDispatcher("/jsp/buscarTarjeta.jsp");
+			}else{
+				request.setAttribute("titulo", "Ampliar Disponible");
+				request.setAttribute("numero", tarjeta1.getNumero());
+				request.setAttribute("cupoDisponible", tarjeta1.getCupoDisponible());
+				request.setAttribute("accion", "Ampliar Disponible");
+				rd = request.getRequestDispatcher("/jsp/modificar.jsp");
+			}
 			rd.forward(request, response);
 			break;
 		case "ampliarDisponible3":
@@ -106,28 +120,36 @@ public class BancoServlet extends HttpServlet {
 			rd = request.getRequestDispatcher("/index.jsp");
 			rd.forward(request, response);
 			break;
+		case "bloquear2":
+			String num4 = request.getParameter("numero");
+			BloquearTarjetaControllerEjb controlador4 = new BloquearTarjetaControllerEjb();
+			mensaje = controlador4.bloquearTarjeta(num4);
+			if (mensaje==""){
+				rd = request.getRequestDispatcher("/index.jsp");				
+			}else{
+				request.setAttribute("mensaje", mensaje);
+				rd=request.getRequestDispatcher("/jsp/bloquearTarjeta.jsp");
+			}		
+			rd.forward(request, response);
+			break;
 		case "pago2":
 			String num3 = request.getParameter("numero");
 			String contrasenha1 = request.getParameter("contrasenha");
 			String numeroComprobacion1 = request.getParameter("numeroComprobacion");
 			int importe = Integer.parseInt(request.getParameter("importe"));
 			PagoControllerEjb controlador3 = new PagoControllerEjb();
-			controlador3.pagoTarjeta(num3, contrasenha1, numeroComprobacion1, importe);
-			rd = request.getRequestDispatcher("/index.jsp");
-			rd.forward(request, response);
-			break;
-		case "bloquear2":
-			String num4 = request.getParameter("numero");
-			BloquearTarjetaControllerEjb controlador4 = new BloquearTarjetaControllerEjb();
-			controlador4.bloquearTarjeta(num4);
-			rd = request.getRequestDispatcher("/index.jsp");
+			mensaje = controlador3.pagoTarjeta(num3, contrasenha1, numeroComprobacion1, importe);
+			if(mensaje==""){
+				rd = request.getRequestDispatcher("/index.jsp");				
+			}else{
+				request.setAttribute("mensaje", mensaje);
+				rd=request.getRequestDispatcher("/jsp/pago.jsp");
+			}
 			rd.forward(request, response);
 			break;
 		default:
 			break;
 		}
-	
-	
 	}
 
 }
