@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/Templates/header.jsp" %>
     <h2>PAGO CON TARJETA</h2>
-    <label><%=request.getAttribute("mensaje") %></label>
+    <label class="error"><%=request.getAttribute("mensaje") %></label>
     <form action="${pageContext.request.contextPath}/Banco/pago2" 
         method="post" enctype="text/html" name="form1">
         <label>Numero de tarjeta</label>

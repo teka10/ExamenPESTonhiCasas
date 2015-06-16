@@ -39,22 +39,22 @@ public class BancoServlet extends HttpServlet {
 		
 		switch (action){
 		case "altaTarjeta1":
-			request.setAttribute("mensaje", "Datos obligatorios:");
+			request.setAttribute("mensaje", "");
 			rd=request.getRequestDispatcher("/jsp/altaTarjeta.jsp");
 			rd.forward(request,response);
 			break;
 		case "ampliarDisponible1":
-			request.setAttribute("mensaje", "Datos obligatorios:");
+			request.setAttribute("mensaje", "");
 			rd=request.getRequestDispatcher("/jsp/buscarTarjeta.jsp");
 			rd.forward(request,response);
 			break;
 		case "bloquear1":
-			request.setAttribute("mensaje", "Datos obligatorios:");
+			request.setAttribute("mensaje", "");
 			rd=request.getRequestDispatcher("/jsp/bloquearTarjeta.jsp");
 			rd.forward(request,response);
 			break;
 		case "pago1":
-			request.setAttribute("mensaje", "Datos obligatorios:");
+			request.setAttribute("mensaje", "");
 			rd=request.getRequestDispatcher("/jsp/pago.jsp");
 			rd.forward(request,response);
 			break;
